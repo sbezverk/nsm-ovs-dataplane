@@ -1,0 +1,73 @@
+// Copyright 2018 Red Hat, Inc.
+// Copyright (c) 2018 Cisco and/or its affiliates.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at:
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// This contains the core Network Service Mesh API definitions for external
+// consumption via gRPC protobufs.
+
+syntax = "proto3";
+
+package common;
+
+// common.proto contains common protobuf structures used by other
+// proto messages in NSM API.
+//
+
+message Empty{
+
+}
+
+message InterfaceParameters {
+   map <string,string> interface_parameters = 1;
+}
+
+message Interface {
+   InterfaceType type = 1;
+   InterfacePreference preference = 2;
+   InterfaceParameters parmeters = 3;
+}
+
+enum InterfaceType {
+    DEFAULT_INTERFACE = 0;
+    KERNEL_INTERFACE = 1;
+    VHOST_INTERFACE = 2;
+    MEM_INTERFACE = 3;
+    SRIOV_INTERFACE = 4;
+    HW_INTERFACE = 5;
+  }
+
+enum InterfacePreference {
+    NO_PREFERENCE = 0;
+    FIRST = 1;
+    SECOND = 2;
+    THIRD = 3;
+    FORTH = 4;
+    FIFTH = 5;
+}
+
+message RemoteMechanism {
+    RemoteMechanismType type = 1;
+    map<string,string> constraints = 2;
+}
+
+enum RemoteMechanismType {
+    NONE = 0;
+    VXLAN = 1;
+    VXLAN_GPE = 2;
+    GRE = 3;
+    SRV6 = 4;
+    MPLSoEthernet = 5;
+    MPLSoGRE = 6;
+    MPLSoUDP = 7;
+}
