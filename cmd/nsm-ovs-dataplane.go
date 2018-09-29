@@ -156,7 +156,7 @@ func main() {
 
 		registrarConnection := dataplaneregistrarapi.NewDataplaneRegistrationClient(conn)
 		dataplane := dataplaneregistrarapi.DataplaneRegistrationRequest{
-			DataplaneName:   "test-dataplane",
+			DataplaneName:   "nsm-ovs-dataplane",
 			DataplaneSocket: socket,
 			RemoteMechanism: []*common.RemoteMechanism{},
 			SupportedInterface: []*common.Interface{

@@ -20,7 +20,7 @@ nsm-ovs-dataplane-mac:
 	CGO_ENABLED=0 GOOS=darwin go build -a -ldflags '-extldflags "-static"' -o ./bin/nsm-ovs-dataplane ./cmd/nsm-ovs-dataplane.go
 
 container: nsm-ovs-dataplane
-	docker build -t $(REGISTRY_NAME)/nsm-ovs-dataplane:$(IMAGE_VERSION) -f ./Dockerfile .
+	docker build -t $(REGISTRY_NAME)/nsm-ovs-dataplane:$(IMAGE_VERSION) -f ./build/Dockerfile .
 
 push: container
 	docker push $(REGISTRY_NAME)/nsm-ovs-dataplane:$(IMAGE_VERSION)

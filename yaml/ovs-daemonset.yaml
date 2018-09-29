@@ -1,0 +1,32 @@
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+spec:
+  template:
+    metadata:
+      labels:
+        app: nsm-ovs-daemon
+    spec:
+      hostNetwork: "true"
+      hostIPC: "true"
+      containers:
+        - name: sriov-controller
+          image: 192.168.80.240:4000/networkservicemesh/ovs-daemon:latest
+          imagePullPolicy: Always
+          volumeMounts:
+          - name: run
+            mountPath: /var/run/openvswitch
+          - name: lib
+            mountPath: /var/lib
+      volumes:
+        - hostPath:
+            path: /var/run/openvswitch
+            type: DirectoryOrCreate
+          name: run
+        - hostPath:
+            path: /var/lib
+            type: DirectoryOrCreate
+          name: lib
+metadata:
+   name: nsm-ovs-daemon
+   namespace: default
