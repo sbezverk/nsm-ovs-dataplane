@@ -2,6 +2,7 @@ FROM alpine:latest
 
 # Install dependencies
 RUN apk --update add openssh \
+                     strace \
                      supervisor \
                      openvswitch
 

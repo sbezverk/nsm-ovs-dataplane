@@ -29,6 +29,7 @@ import (
 	dataplaneregistrarapi "github.com/ligato/networkservicemesh/pkg/nsm/apis/dataplaneregistrar"
 	"github.com/ligato/networkservicemesh/pkg/tools"
 	"github.com/ligato/networkservicemesh/plugins/dataplaneregistrar"
+	"github.com/sbezverk/nsmovsdataplane/pkg/ovsinterface"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
@@ -42,6 +43,8 @@ const (
 
 var (
 	dataplane       = flag.String("dataplane-socket", dataplaneSocket, "Location of the dataplane gRPC socket")
+	ovsSocket       = flag.String("ovs-socket", "/var/run/openvswitch/db.sock", "Location of OpenvSwitch database socket")
+	kubeconfig      = flag.String("kubeconfig", "", "Absolute path to the kubeconfig file. Either this or master needs to be set if the provisioner is being run out of cluster.")
 	registrarSocket = path.Join(dataplaneregistrar.DataplaneRegistrarSocketBaseDir, dataplaneregistrar.DataplaneRegistrarSocket)
 )
 
@@ -102,6 +105,22 @@ func main() {
 
 	flag.Parse()
 
+	ovsDataplane, err := ovsinterface.NewOVSDataplane(*ovsSocket)
+	if err != nil {
+		logrus.Errorf("Failed with error: %+v", err)
+		os.Exit(1)
+	}
+	if err := ovsDataplane.CreateBridge("test-1"); err != nil {
+		logrus.Errorf("Failed with error: %+v", err)
+		os.Exit(1)
+	}
+	ovsDataplane.ListBridges()
+	if err := ovsDataplane.DeleteBridge("test-1"); err != nil {
+		logrus.Errorf("Failed with error: %+v", err)
+		os.Exit(1)
+	}
+	ovsDataplane.ListBridges()
+	os.Exit(0)
 	// Step 1: Start server on our dataplane socket, for now 2 API will be bound to this socket
 	// DataplaneInterface API (eventually it will become the only API needed), currently used to notify
 	// NSM for any changes in operational parameters and/or constraints and TestDataplane API which is used
